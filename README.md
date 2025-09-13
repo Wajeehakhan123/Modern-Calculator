@@ -19,7 +19,4 @@ A **simple, stylish, and responsive calculator** built with **HTML, Tailwind CSS
  
 <img width="658" height="817" alt="Screenshot 2025-09-13 214229" src="https://github.com/user-attachments/assets/5226dd11-3878-4851-bd82-3872ecff180d" />
 
-## 🛠️ How to Use  
-1. Clone the repository:  
-   ```bash
-git clone https://github.com/WajeehaKhan/modern-calculator.git 
+ 

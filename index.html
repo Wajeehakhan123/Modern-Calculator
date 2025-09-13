@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculator</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+.calculator-display {
+font-family: 'Roboto Mono', monospace;
+}
+.calculator-button {
+transition: all 0.1s ease;
+}
+.calculator-button:active {
+transform: scale(0.95);
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+</style>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+primary: '#3b82f6',
+secondary: '#10b981'
+},
+borderRadius: {
+'none': '0px',
+'sm': '4px',
+DEFAULT: '8px',
+'md': '12px',
+'lg': '16px',
+'xl': '20px',
+'2xl': '24px',
+'3xl': '32px',
+'full': '9999px',
+'button': '8px'
+}
+}
+}
+}
+</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap">
+</head>
+<body class="bg-blue-50 min-h-screen flex items-center justify-center p-4">
+<div class="max-w-md w-full">
+<div class="text-center mb-6">
+<h1 class="text-3xl font-['Pacifico'] text-gray-800">Calculator</h1>
+<p class="text-gray-500 mt-2">Simple and elegant calculator for your daily calculations</p>
+</div>
+<div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+<!-- Calculator Display -->
+<div class="p-4 bg-gray-50 border-b border-gray-100">
+<div class="calculator-display bg-white border border-gray-200 rounded p-4 h-24 flex flex-col items-end justify-between">
+<div id="calculation-history" class="text-gray-400 text-sm w-full text-right overflow-hidden h-6"></div>
+<div id="display" class="text-3xl font-semibold text-gray-800 w-full text-right overflow-hidden">0</div>
+</div>
+</div>
+<!-- Calculator Buttons -->
+<div class="p-4 bg-white">
+<!-- Row 1: Clear buttons -->
+<div class="grid grid-cols-4 gap-3 mb-3">
+<button class="calculator-button bg-red-100 text-red-600 h-16 flex items-center justify-center font-medium text-lg !rounded-button whitespace-nowrap" onclick="clearAll()">AC</button>
+<button class="calculator-button bg-orange-100 text-orange-600 h-16 flex items-center justify-center font-medium text-lg !rounded-button whitespace-nowrap" onclick="clearEntry()">C</button>
+<button class="calculator-button bg-blue-100 text-blue-600 h-16 flex items-center justify-center font-medium text-lg !rounded-button whitespace-nowrap" onclick="addToDisplay('%')">%</button>
+<button class="calculator-button bg-primary bg-opacity-10 text-primary h-16 flex items-center justify-center font-medium text-xl !rounded-button whitespace-nowrap" onclick="addToDisplay('/')">÷</button>
+</div>
+<!-- Row 2: 7, 8, 9, × -->
+<div class="grid grid-cols-4 gap-3 mb-3">
+<button class="calculator-button bg-gray-100 text-gray-700 h-16 flex items-center justify-center font-medium text-lg !rounded-button whitespace-nowrap" onclick="addToDisplay('7')">7</button>
+<button class="calculator-button bg-gray-100 text-gray-700 h-16 flex items-center justify-center font-medium text-lg !rounded-button whitespace-nowrap" onclick="addToDisplay('8')">8</button>
+<button class="calculator-button bg-gray-100 text-gray-700 h-16 flex items-center justify-center font-medium text-lg !rounded-button whitespace-nowrap" onclick="addToDisplay('9')">9</button>
+<button class="calculator-button bg-primary bg-opacity-10 text-primary h-16 flex items-center justify-center font-medium text-xl !rounded-button whitespace-nowrap" onclick="addToDisplay('*')">×</button>
+</div>
+<!-- Row 3: 4, 5, 6, - -->
+<div class="grid grid-cols-4 gap-3 mb-3">
+<button class="calculator-button bg-gray-100 text-gray-700 h-16 flex items-center justify-center font-medium text-lg !rounded-button whitespace-nowrap" onclick="addToDisplay('4')">4</button>
+<button class="calculator-button bg-gray-100 text-gray-700 h-16 flex items-center justify-center font-medium text-lg !rounded-button whitespace-nowrap" onclick="addToDisplay('5')">5</button>
+<button class="calculator-button bg-gray-100 text-gray-700 h-16 flex items-center justify-center font-medium text-lg !rounded-button whitespace-nowrap" onclick="addToDisplay('6')">6</button>
+<button class="calculator-button bg-primary bg-opacity-10 text-primary h-16 flex items-center justify-center font-medium text-xl !rounded-button whitespace-nowrap" onclick="addToDisplay('-')">−</button>
+</div>
+<!-- Row 4: 1, 2, 3, + -->
+<div class="grid grid-cols-4 gap-3 mb-3">
+<button class="calculator-button bg-gray-100 text-gray-700 h-16 flex items-center justify-center font-medium text-lg !rounded-button whitespace-nowrap" onclick="addToDisplay('1')">1</button>
+<button class="calculator-button bg-gray-100 text-gray-700 h-16 flex items-center justify-center font-medium text-lg !rounded-button whitespace-nowrap" onclick="addToDisplay('2')">2</button>
+<button class="calculator-button bg-gray-100 text-gray-700 h-16 flex items-center justify-center font-medium text-lg !rounded-button whitespace-nowrap" onclick="addToDisplay('3')">3</button>
+<button class="calculator-button bg-primary bg-opacity-10 text-primary h-16 flex items-center justify-center font-medium text-xl !rounded-button whitespace-nowrap" onclick="addToDisplay('+')">+</button>
+</div>
+<!-- Row 5: 0, ., = -->
+<div class="grid grid-cols-4 gap-3">
+<button class="calculator-button bg-gray-100 text-gray-700 h-16 flex items-center justify-center font-medium text-lg col-span-2 !rounded-button whitespace-nowrap" onclick="addToDisplay('0')">0</button>
+<button class="calculator-button bg-gray-100 text-gray-700 h-16 flex items-center justify-center font-medium text-lg !rounded-button whitespace-nowrap" onclick="addToDisplay('.')">.</button>
+<button class="calculator-button bg-primary text-white h-16 flex items-center justify-center font-medium text-xl !rounded-button whitespace-nowrap" onclick="calculate()">=</button>
+</div>
+</div>
+</div>
+<div class="mt-6 text-center text-gray-500 text-sm">
+
+</div>
+</div>
+<script>
+let currentInput = '0';
+let calculationHistory = '';
+let shouldResetDisplay = false;
+document.addEventListener('DOMContentLoaded', function() {
+updateDisplay();
+});
+function updateDisplay() {
+document.getElementById('display').textContent = currentInput;
+document.getElementById('calculation-history').textContent = calculationHistory;
+}
+function addToDisplay(value) {
+// If we need to reset the display after a calculation
+if (shouldResetDisplay) {
+if ('0123456789.'.includes(value)) {
+currentInput = value === '.' ? '0.' : value;
+calculationHistory = '';
+} else {
+calculationHistory = currentInput;
+currentInput = value;
+}
+shouldResetDisplay = false;
+} else {
+// Handle different cases
+if (currentInput === '0' && value !== '.') {
+currentInput = value;
+} else if (isOperator(value) && isOperator(currentInput[currentInput.length - 1])) {
+// Replace the last operator
+currentInput = currentInput.slice(0, -1) + value;
+} else if (value === '.' && currentInput.includes('.')) {
+// Prevent multiple decimal points in a number
+const lastOperatorIndex = Math.max(
+currentInput.lastIndexOf('+'),
+currentInput.lastIndexOf('-'),
+currentInput.lastIndexOf('*'),
+currentInput.lastIndexOf('/')
+);
+const currentNumberPart = currentInput.slice(lastOperatorIndex + 1);
+if (currentNumberPart.includes('.')) {
+return;
+} else {
+currentInput += value;
+}
+} else {
+currentInput += value;
+}
+}
+updateDisplay();
+}
+function isOperator(char) {
+return ['+', '-', '*', '/'].includes(char);
+}
+function clearEntry() {
+currentInput = '0';
+updateDisplay();
+}
+function clearAll() {
+currentInput = '0';
+calculationHistory = '';
+shouldResetDisplay = false;
+updateDisplay();
+}
+function calculate() {
+try {
+// Replace % with /100 for percentage calculations
+let expression = currentInput.replace(/%/g, '/100');
+// Store the calculation in history
+calculationHistory = currentInput + ' =';
+// Evaluate the expression
+let result = eval(expression);
+// Format the result
+if (result === undefined || isNaN(result) || !isFinite(result)) {
+currentInput = 'Error';
+} else {
+// Limit decimal places for readability
+if (Number.isInteger(result)) {
+currentInput = result.toString();
+} else {
+// Limit to 8 decimal places and remove trailing zeros
+currentInput = parseFloat(result.toFixed(8)).toString();
+}
+}
+shouldResetDisplay = true;
+updateDisplay();
+} catch (error) {
+currentInput = 'Error';
+shouldResetDisplay = true;
+updateDisplay();
+}
+}
+// Add keyboard support
+document.addEventListener('keydown', function(event) {
+const key = event.key;
+if ('0123456789.'.includes(key)) {
+addToDisplay(key);
+} else if (key === '+' || key === '-') {
+addToDisplay(key);
+} else if (key === '*' || key === 'x' || key === 'X') {
+addToDisplay('*');
+} else if (key === '/' || key === '÷') {
+addToDisplay('/');
+} else if (key === '%') {
+addToDisplay('%');
+} else if (key === 'Enter' || key === '=') {
+calculate();
+} else if (key === 'Backspace') {
+if (currentInput.length === 1 || currentInput === 'Error') {
+currentInput = '0';
+} else {
+currentInput = currentInput.slice(0, -1);
+}
+updateDisplay();
+} else if (key === 'Escape') {
+clearAll();
+} else if (key === 'c' || key === 'C') {
+clearEntry();
+}
+});
+</script>
+</body>
+</html>
